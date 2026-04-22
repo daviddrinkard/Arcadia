@@ -37,12 +37,10 @@ something I've loved for decades.
 
 # Running the App
 
-Arcadia is an npm workspaces monorepo containing two apps:
+Arcadia is a Next.js application with its API built in as Next.js API Routes, so frontend and backend deploy together as a single Vercel project. The app lives under `apps/web` in an npm workspaces layout.
 
-- `apps/web` — the Next.js frontend (package name: `arcadia`), runs on port 3000
-- `apps/api` — the Express backend (package name: `arcadia-api`), runs on port 4000
-
-The frontend proxies `/api/*` to the Express server in development (configured in `apps/web/next.config.ts`), so the frontend can call `fetch('/api/...')` without CORS setup.
+- `apps/web` — the Next.js app (package name: `arcadia`), runs on port 3000
+- API routes live under `apps/web/src/pages/api/` and are served from the same origin at `/api/*`
 
 ## First-time setup
 
@@ -52,8 +50,6 @@ From the repo root:
 npm install
 ```
 
-This installs dependencies for both apps into a shared `node_modules`.
-
 ## Running in development
 
 From the repo root:
@@ -62,33 +58,31 @@ From the repo root:
 npm run dev
 ```
 
-This starts both apps in parallel:
-- Frontend: http://localhost:3000
-- Backend:  http://localhost:4000
-
-To run just one app at a time:
-
-```
-npm run dev:web   # frontend only
-npm run dev:api   # backend only
-```
+The app will be available at http://localhost:3000.
 
 ## Building for production
 
 ```
-npm run build     # builds both apps
-npm run start:web # serve the built frontend
-npm run start:api # serve the built backend
+npm run build
+npm run start
 ```
 
 ## Verifying the API
 
-With the dev server running, the Express health endpoint should return `{"status":"ok","service":"arcadia-api"}`:
+With the dev server running, the health endpoint should return `{"status":"ok","service":"arcadia-api"}`:
 
 ```
-curl http://localhost:4000/api/health        # direct to Express
-curl http://localhost:3000/api/health        # via the Next.js proxy
+curl http://localhost:3000/api/health
 ```
+
+## Deployment
+
+The app deploys to Vercel as a single project. In Vercel project settings, set:
+
+- **Framework Preset:** Next.js
+- **Root Directory:** `apps/web`
+
+Install / Build / Output commands can be left as Vercel's defaults.
 
 # Development Rules for github/git
 
