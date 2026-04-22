@@ -46,7 +46,10 @@ Arcadia is a Next.js application with its API built in as Next.js API Routes, so
 
 ```
 npm install
+cp .env.example .env.local
 ```
+
+Then open `.env.local` and fill in real values (MongoDB URI, etc.). See [Environment variables](#environment-variables) below for what each one is.
 
 ## Running in development
 
@@ -70,6 +73,24 @@ With the dev server running, the health endpoint should return `{"status":"ok","
 ```
 curl http://localhost:3000/api/health
 ```
+
+## Environment variables
+
+Config lives in `.env.local` (gitignored) for local dev and in Vercel's Environment Variables panel for deployed environments. `.env.example` is the committed template — keep it in sync when you add new variables.
+
+| Variable               | Where                    | Purpose                                                                 |
+| ---------------------- | ------------------------ | ----------------------------------------------------------------------- |
+| `NEXT_PUBLIC_SITE_URL` | client + server          | Canonical URL of the app. Used for absolute URLs (OG tags, emails, etc.). |
+| `MONGODB_URI`          | server only              | MongoDB Atlas connection string. Contains credentials — never expose.     |
+| `MONGODB_DB`           | server only              | Default database name inside the Mongo cluster.                         |
+
+**Rules of thumb:**
+- `NEXT_PUBLIC_` prefix → readable from browser code (bundled into client JS). Never put secrets behind this prefix.
+- No prefix → server-side only (API routes, `getServerSideProps`, etc.).
+- After changing `.env.local`, restart `npm run dev` for Next to pick up the new values.
+
+**Setting these in Vercel:**
+Project Settings → Environment Variables → add each one. Scope `NEXT_PUBLIC_SITE_URL` to **Production** only (set it to `https://arcadia-sandy.vercel.app`). Scope `MONGODB_URI` / `MONGODB_DB` to whichever environments should hit the database — typically all three (Production, Preview, Development) pointing at the same cluster, or separate clusters per environment.
 
 ## Deployment
 
