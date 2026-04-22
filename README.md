@@ -35,6 +35,51 @@ I wish to progress this project past a student project into a full-fledged, live
 to have this project come to light and I wish to continue to support it after I finish this class. I hope to give back to the arcade community, which is
 something I've loved for decades.
 
+# Running the App
+
+Arcadia is a Next.js application with its API built in as Next.js API Routes, so frontend and backend deploy together as a single Vercel project.
+
+- Pages live under `src/pages/`
+- API routes live under `src/pages/api/` and are served from the same origin at `/api/*`
+
+## First-time setup
+
+```
+npm install
+```
+
+## Running in development
+
+```
+npm run dev
+```
+
+The app will be available at http://localhost:3000.
+
+## Building for production
+
+```
+npm run build
+npm run start
+```
+
+## Verifying the API
+
+With the dev server running, the health endpoint should return `{"status":"ok","service":"arcadia-api"}`:
+
+```
+curl http://localhost:3000/api/health
+```
+
+## Deployment
+
+The app deploys to Vercel as a single project. In Vercel project settings:
+
+- **Framework Preset:** Next.js
+- **Root Directory:** leave as the repo root (`/`)
+
+Install / Build / Output commands can be left as Vercel's defaults.
+
 # Development Rules for github/git
 
 The repository is split into 2 major branches: main and dev. 'main' is the production branch, where production code lives. 'dev' is the development branch
