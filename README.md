@@ -35,6 +35,61 @@ I wish to progress this project past a student project into a full-fledged, live
 to have this project come to light and I wish to continue to support it after I finish this class. I hope to give back to the arcade community, which is
 something I've loved for decades.
 
+# Running the App
+
+Arcadia is an npm workspaces monorepo containing two apps:
+
+- `apps/web` — the Next.js frontend (package name: `arcadia`), runs on port 3000
+- `apps/api` — the Express backend (package name: `arcadia-api`), runs on port 4000
+
+The frontend proxies `/api/*` to the Express server in development (configured in `apps/web/next.config.ts`), so the frontend can call `fetch('/api/...')` without CORS setup.
+
+## First-time setup
+
+From the repo root:
+
+```
+npm install
+```
+
+This installs dependencies for both apps into a shared `node_modules`.
+
+## Running in development
+
+From the repo root:
+
+```
+npm run dev
+```
+
+This starts both apps in parallel:
+- Frontend: http://localhost:3000
+- Backend:  http://localhost:4000
+
+To run just one app at a time:
+
+```
+npm run dev:web   # frontend only
+npm run dev:api   # backend only
+```
+
+## Building for production
+
+```
+npm run build     # builds both apps
+npm run start:web # serve the built frontend
+npm run start:api # serve the built backend
+```
+
+## Verifying the API
+
+With the dev server running, the Express health endpoint should return `{"status":"ok","service":"arcadia-api"}`:
+
+```
+curl http://localhost:4000/api/health        # direct to Express
+curl http://localhost:3000/api/health        # via the Next.js proxy
+```
+
 # Development Rules for github/git
 
 The repository is split into 2 major branches: main and dev. 'main' is the production branch, where production code lives. 'dev' is the development branch
