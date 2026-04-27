@@ -16,7 +16,7 @@ community driven page where others could share their local arcades, allowing oth
 for people like me, and just being in one brings me immense joy. Having an arcade machine at my house is not the same as visiting an arcade, and I
 wanted to be able to provide a resource for people like me to find either they game they love or an entirely new venue to checkout.
 
-Arcadia will be powered by React, Express API with an SQL database.
+Arcadia is powered by Next.js (React) with API routes, backed by Supabase (Postgres).
 
 # How It Works
 
@@ -49,7 +49,7 @@ npm install
 cp .env.example .env.local
 ```
 
-Then open `.env.local` and fill in real values (MongoDB URI, etc.). See [Environment variables](#environment-variables) below for what each one is.
+Then open `.env.local` and fill in real values (Supabase URL + keys). See [Environment variables](#environment-variables) below for what each one is.
 
 ## Running in development
 
@@ -57,7 +57,7 @@ Then open `.env.local` and fill in real values (MongoDB URI, etc.). See [Environ
 npm run dev
 ```
 
-The app will be available at http://localhost:3000.
+The app will be available at http://localhost:4242.
 
 ## Building for production
 
@@ -68,21 +68,28 @@ npm run start
 
 ## Verifying the API
 
-With the dev server running, the health endpoint should return `{"status":"ok","service":"arcadia-api"}`:
+With the dev server running, the health endpoint pings Supabase and should return:
 
 ```
-curl http://localhost:3000/api/health
+{"status":"ok","service":"arcadia-api","supabase":"connected"}
 ```
+
+```
+curl http://localhost:4242/api/health
+```
+
+If the Supabase URL or publishable key is missing or wrong, the endpoint returns a 503 with `supabase: "unreachable"` and the underlying error message.
 
 ## Environment variables
 
 Config lives in `.env.local` (gitignored) for local dev and in Vercel's Environment Variables panel for deployed environments. `.env.example` is the committed template — keep it in sync when you add new variables.
 
-| Variable               | Where                    | Purpose                                                                 |
-| ---------------------- | ------------------------ | ----------------------------------------------------------------------- |
-| `NEXT_PUBLIC_SITE_URL` | client + server          | Canonical URL of the app. Used for absolute URLs (OG tags, emails, etc.). |
-| `MONGODB_URI`          | server only              | MongoDB Atlas connection string. Contains credentials — never expose.     |
-| `MONGODB_DB`           | server only              | Default database name inside the Mongo cluster.                         |
+| Variable                        | Where           | Purpose                                                                                                          |
+| ------------------------------- | --------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_SITE_URL`          | client + server | Canonical URL of the app. Used for absolute URLs (OG tags, emails, etc.).                                        |
+| `NEXT_PUBLIC_SUPABASE_URL`      | client + server | Supabase project URL. Safe to expose.                                                                            |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | client + server | Supabase publishable (anon) key. Safe to expose — Row Level Security gates access.                               |
+| `SUPABASE_SECRET_KEY`           | server only     | Supabase secret (service role) key. Bypasses RLS — treat like a DB password. Never expose to the browser.        |
 
 **Rules of thumb:**
 - `NEXT_PUBLIC_` prefix → readable from browser code (bundled into client JS). Never put secrets behind this prefix.
@@ -90,7 +97,7 @@ Config lives in `.env.local` (gitignored) for local dev and in Vercel's Environm
 - After changing `.env.local`, restart `npm run dev` for Next to pick up the new values.
 
 **Setting these in Vercel:**
-Project Settings → Environment Variables → add each one. Scope `NEXT_PUBLIC_SITE_URL` to **Production** only (set it to `https://arcadia-sandy.vercel.app`). Scope `MONGODB_URI` / `MONGODB_DB` to whichever environments should hit the database — typically all three (Production, Preview, Development) pointing at the same cluster, or separate clusters per environment.
+Project Settings → Environment Variables → add each one. Scope `NEXT_PUBLIC_SITE_URL` to **Production** only (set it to `https://arcadia-sandy.vercel.app`). Scope the Supabase variables to whichever environments should hit the database — typically all three (Production, Preview, Development) pointing at the same project, or separate Supabase projects per environment.
 
 ## Deployment
 
