@@ -15,6 +15,9 @@
   --foreground: #f1f5f9;
   --primary-button: #f472b6;
   --primary-button-hover: #f01386;
+  /* Scrollbars: thumb only (track stays transparent) */
+  --scrollbar-thumb: var(--muted);
+  --scrollbar-thumb-hover: var(--secondary);
 }
 
 @theme inline {
@@ -32,14 +35,62 @@
   --color-primary-button: var(--primary-button);
   --color-primary-button-hover: var(--primary-button-hover);
 }
-html {
-  min-height: 100%;
+html,
+body {
+  height: 100%;
+  overflow: hidden;
 }
 
 body {
-  min-height: 100%;
   font-family: Arial, Helvetica, sans-serif;
   /* Symmetric L→R: mid grey at edges, black at horizontal center */
   background: linear-gradient(90deg, #353434 0%, #282828 50%, #353434 100%);
   background-attachment: fixed;
+}
+
+/* Pages Router root — fill viewport so inner layout can use flex + overflow */
+#__next {
+  height: 100%;
+  min-height: 0;
+}
+
+/*
+ * Global minimalist scrollbars — applies to every scroll container in the app.
+ * Tune colors via --scrollbar-thumb / --scrollbar-thumb-hover in :root above.
+ */
+@layer base {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) transparent;
+  }
+
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: var(--scrollbar-thumb-hover);
+  }
+
+  *::-webkit-scrollbar-button {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  *::-webkit-scrollbar-corner {
+    background: transparent;
+  }
 }
