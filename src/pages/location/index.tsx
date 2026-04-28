@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import Button from "../components/Button";
 import GameButton from "../components/GameButton";
+import ReviewBlock from "../components/ReviewBlock";
 
 export default function Location() {
   const router = useRouter();
@@ -17,6 +18,44 @@ export default function Location() {
     { name: "Street Fighter VIII", genre: "Fighting", id: 6 },
   ];
 
+  const reviews = [
+    {
+      rating: 5,
+      title: "Great Arcade!",
+      review:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi.",
+      id: 1,
+    },
+    {
+      rating: 4,
+      title: "Good Arcade!",
+      review:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi.",
+      id: 2,
+    },
+    {
+      rating: 3,
+      title: "Bad Arcade!",
+      review:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi.",
+      id: 3,
+    },
+    {
+      rating: 2,
+      title: "Terrible Arcade!",
+      review:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi.",
+      id: 4,
+    },
+    {
+      rating: 1,
+      title: "Horrible Arcade!",
+      review:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi.",
+      id: 5,
+    },
+  ];
+
   useEffect(() => {
     if (!router.isReady || id === undefined) return;
     // fetch locations when you wire the API
@@ -30,7 +69,39 @@ export default function Location() {
         </Button>
       </div>
       <div className="flex min-h-0 min-w-0 flex-1 flex-row">
-        <div className="w-1/2 min-h-0 border-r border-gray-300">Left Side</div>
+        {/* Left Side */}
+        <div className="w-1/2 min-h-0 border-r border-gray-300 flex flex-col">
+          {/* Map */}
+          <div className="h-40 bg-green-500 m-2 rounded-md items-center justify-center flex">
+            Map Goes Here
+          </div>
+
+          {/* Name & Locations */}
+          <div className="flex flex-col m-2">
+            <p className="text-3xl font-bold">Dave&apos;s Arcade</p>
+            <div className="flex flex-col text-sm">
+              <p>123 Anystreet</p>
+              <p>Anytown, USA 92010</p>
+              <p>555-555-5555</p>
+              <p>info@davesarcade.com</p>
+            </div>
+            <div className="pt-4">Star Blocks Here XXXXX</div>
+          </div>
+
+          {/* Reviews */}
+          <div className="flex flex-col m-2 gap-2 overflow-y-auto">
+            {reviews.map((review) => (
+              <ReviewBlock
+                key={review.id}
+                rating={review.rating}
+                title={review.title}
+                review={review.review}
+                id={review.id}
+              />
+            ))}
+          </div>
+        </div>
+        {/* Right Side */}
         <div className="flex w-1/2 min-h-0 min-w-0 flex-col gap-2 overflow-hidden pl-2">
           <div className="w-full shrink-0">
             <p className="text-lg font-bold">Available Games:</p>
