@@ -1,5 +1,45 @@
 @import "tailwindcss";
 
+/* Semantic palette — change values here to restyle the app */
+:root {
+  --primary: #22d3ee;
+  --primary-foreground: #0c1929;
+  --secondary: #94a3b8;
+  --secondary-foreground: #0f172a;
+  --accent: #f472b6;
+  --accent-foreground: #1a0514;
+  --muted: #64748b;
+  --muted-foreground: #cbd5e1;
+  --border: #475569;
+  --background: #0f172a;
+  --foreground: #f1f5f9;
+  --primary-button: #f472b6;
+  --primary-button-hover: #f01386;
+}
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary-button: var(--primary-button);
+  --color-primary-button-hover: var(--primary-button-hover);
+}
+html {
+  min-height: 100%;
+}
+
 body {
+  min-height: 100%;
   font-family: Arial, Helvetica, sans-serif;
+  /* Symmetric L→R: mid grey at edges, black at horizontal center */
+  background: linear-gradient(90deg, #353434 0%, #282828 50%, #353434 100%);
+  background-attachment: fixed;
 }

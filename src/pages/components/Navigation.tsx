@@ -1,12 +1,12 @@
-import Link from "next/link";
+import NavButton from "./NavButton";
 
 export default function Navigation() {
   return (
-    <div className="flex items-center justify-between gap-4 bg-yellow-300 py-2 px-8">
-      <Link href="/">Home</Link>
+    <div className="flex items-center justify-between gap-4 bg-yellow-300 px-8">
+      <NavButton url="/">Home</NavButton>
       <div className="flex gap-4">
-        <Link href="/toparcades">Top Arcades</Link>
-        <Link href="/gamelist">Game List</Link>
+        <NavButton url="/toparcades">Top Arcades</NavButton>
+        <NavButton url="/gamelist">Game List</NavButton>
       </div>
     </div>
   );

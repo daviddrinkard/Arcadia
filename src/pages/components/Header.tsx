@@ -6,9 +6,13 @@ export default function Header({ isLoggedIn }: { isLoggedIn?: boolean }) {
       <h1>Arcadia</h1>
       <div className="flex flex-row items-center gap-4">
         {isLoggedIn ? (
-          <Button url="/dashboard">Dashboard</Button>
+          <Button url="/dashboard" variant="secondary">
+            Dashboard
+          </Button>
         ) : (
-          <Button url="/login">Login</Button>
+          <Button url="/login" variant="secondary">
+            Login
+          </Button>
         )}
       </div>
     </div>
