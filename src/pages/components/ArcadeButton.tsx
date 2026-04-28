@@ -1,6 +1,12 @@
-export default function ArcadeButton({ key }: { key: string }) {
+import Link from "next/link";
+
+export default function ArcadeButton({ key, id }: { key: string; id: number }) {
   return (
-    <div key={key} className="bg-black text-white p-4 rounded-md">
+    <Link
+      key={key}
+      href={`/location?id=${id}`}
+      className="bg-black text-white p-4 rounded-md"
+    >
       {/* Name and Location Block */}
       <div className="pb-2">
         <p className="text-3xl font-bold">Dave&apos;s Arcade</p>
@@ -11,6 +17,6 @@ export default function ArcadeButton({ key }: { key: string }) {
         <div>XXXXX</div>
         <div className="text-xs">(100 reviews)</div>
       </div>
-    </div>
+    </Link>
   );
 }

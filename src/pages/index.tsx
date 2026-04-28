@@ -54,22 +54,26 @@ const states = [
 ];
 
 const arcades = [
-  { name: "Dave&apos;s Arcade", location: "Atlanta, GA", reviews: 100 },
-  { name: "John&apos;s Arcade", location: "New York, NY", reviews: 200 },
-  { name: "Jane&apos;s Arcade", location: "Los Angeles, CA", reviews: 300 },
-  { name: "Jim&apos;s Arcade", location: "Chicago, IL", reviews: 400 },
+  { name: "Dave&apos;s Arcade", location: "Atlanta, GA", reviews: 100, id: 1 },
+  { name: "John&apos;s Arcade", location: "New York, NY", reviews: 200, id: 2 },
+  {
+    name: "Jane&apos;s Arcade",
+    location: "Los Angeles, CA",
+    reviews: 300,
+    id: 3,
+  },
+  { name: "Jim&apos;s Arcade", location: "Chicago, IL", reviews: 400, id: 4 },
+  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500, id: 5 },
+  { name: "Jack&apos;s Arcade", location: "Miami, FL", reviews: 600, id: 6 },
   { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500 },
-  { name: "Jack&apos;s Arcade", location: "Miami, FL", reviews: 600 },
-  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500 },
-  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500 },
-  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500 },
-  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500 },
-  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500 },
-  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500 },
-  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500 },
-  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500 },
-  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500 },
-  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500 },
+  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500, id: 8 },
+  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500, id: 9 },
+  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500, id: 10 },
+  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500, id: 11 },
+  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500, id: 12 },
+  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500, id: 13 },
+  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500, id: 14 },
+  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500, id: 15 },
 ];
 export default function Home() {
   return (
@@ -81,7 +85,7 @@ export default function Home() {
       </div>
       <div className="grid min-h-0 min-w-0 flex-1 auto-rows-min grid-cols-1 content-start gap-4 overflow-y-auto pl-4 sm:grid-cols-2">
         {arcades.map((arcade) => (
-          <ArcadeButton key={arcade.name} />
+          <ArcadeButton key={arcade.name} id={arcade.id ?? 0} />
         ))}
       </div>
     </div>
