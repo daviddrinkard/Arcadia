@@ -84,8 +84,14 @@ export default function Home() {
         ))}
       </div>
       <div className="grid min-h-0 min-w-0 flex-1 auto-rows-min grid-cols-1 content-start gap-4 overflow-y-auto pl-4 sm:grid-cols-2">
-        {arcades.map((arcade) => (
-          <ArcadeButton key={arcade.name} id={arcade.id ?? 0} />
+        {arcades.map((arcade, index) => (
+          <ArcadeButton
+            key={arcade.id ?? `arcade-${index}`}
+            id={arcade.id ?? index}
+            name={arcade.name}
+            location={arcade.location ?? ""}
+            reviews={arcade.reviews ?? 0}
+          />
         ))}
       </div>
     </div>

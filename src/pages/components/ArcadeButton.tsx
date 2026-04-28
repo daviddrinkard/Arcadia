@@ -1,21 +1,30 @@
 import Link from "next/link";
 
-export default function ArcadeButton({ key, id }: { key: string; id: number }) {
+export type ArcadeButtonProps = {
+  id: number;
+  name: string;
+  location: string;
+  reviews: number;
+};
+
+export default function ArcadeButton({
+  id,
+  name,
+  location,
+  reviews,
+}: ArcadeButtonProps) {
   return (
     <Link
-      key={key}
       href={`/location?id=${id}`}
-      className="bg-black text-white p-4 rounded-md"
+      className="block w-full max-w-full rounded-md bg-black p-4 text-white"
     >
-      {/* Name and Location Block */}
       <div className="pb-2">
-        <p className="text-3xl font-bold">Dave&apos;s Arcade</p>
-        <p className="text-xs">Atlanta, GA</p>
+        <p className="text-3xl font-bold">{name}</p>
+        <p className="text-xs">{location}</p>
       </div>
-      {/* Reviews Block */}
       <div className="flex flex-row items-center gap-2">
         <div>XXXXX</div>
-        <div className="text-xs">(100 reviews)</div>
+        <div className="text-xs">({reviews} reviews)</div>
       </div>
     </Link>
   );
