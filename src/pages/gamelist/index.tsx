@@ -1,4 +1,4 @@
-import ArcadeButton from "../components/ArcadeButton";
+import ArcadeButton from "@/components/ArcadeButton";
 
 const games = [
   { name: "Street Fighter III", genre: "Fighting", id: 1 },

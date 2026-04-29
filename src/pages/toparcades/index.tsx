@@ -1,4 +1,4 @@
-import ArcadeButton from "../components/ArcadeButton";
+import ArcadeButton from "@/components/ArcadeButton";
 export default function TopArcades() {
   const arcades = [
     {

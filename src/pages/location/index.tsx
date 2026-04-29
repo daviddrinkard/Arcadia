@@ -1,8 +1,8 @@
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import Button from "../components/Button";
-import GameButton from "../components/GameButton";
-import ReviewBlock from "../components/ReviewBlock";
+import Button from "@/components/Button";
+import GameButton from "@/components/GameButton";
+import ReviewBlock from "@/components/ReviewBlock";
 
 export default function Location() {
   const router = useRouter();
