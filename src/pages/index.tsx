@@ -1,78 +1,116 @@
-import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
+import ArcadeButton from "@/components/ArcadeButton";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+const states = [
+  "Alabama",
+  "Alaska",
+  "Arizona",
+  "Arkansas",
+  "California",
+  "Colorado",
+  "Connecticut",
+  "Delaware",
+  "Florida",
+  "Georgia",
+  "Hawaii",
+  "Idaho",
+  "Illinois",
+  "Indiana",
+  "Iowa",
+  "Kansas",
+  "Kentucky",
+  "Louisiana",
+  "Maine",
+  "Maryland",
+  "Massachusetts",
+  "Michigan",
+  "Minnesota",
+  "Mississippi",
+  "Missouri",
+  "Montana",
+  "Nebraska",
+  "Nevada",
+  "New Hampshire",
+  "New Jersey",
+  "New Mexico",
+  "New York",
+  "North Carolina",
+  "North Dakota",
+  "Ohio",
+  "Oklahoma",
+  "Oregon",
+  "Pennsylvania",
+  "Rhode Island",
+  "South Carolina",
+  "South Dakota",
+  "Tennessee",
+  "Texas",
+  "Utah",
+  "Vermont",
+  "Virginia",
+  "Washington",
+  "West Virginia",
+  "Wisconsin",
+  "Wyoming",
+];
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
+const arcades = [
+  { name: "Dave&apos;s Arcade", location: "Atlanta, GA", reviews: 100, id: 1 },
+  { name: "John&apos;s Arcade", location: "New York, NY", reviews: 200, id: 2 },
+  {
+    name: "Jane&apos;s Arcade",
+    location: "Los Angeles, CA",
+    reviews: 300,
+    id: 3,
+  },
+  { name: "Jim&apos;s Arcade", location: "Chicago, IL", reviews: 400, id: 4 },
+  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500, id: 5 },
+  { name: "Jack&apos;s Arcade", location: "Miami, FL", reviews: 600, id: 6 },
+  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500 },
+  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500, id: 8 },
+  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500, id: 9 },
+  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500, id: 10 },
+  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500, id: 11 },
+  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500, id: 12 },
+  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500, id: 13 },
+  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500, id: 14 },
+  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500, id: 15 },
+];
 export default function Home() {
   return (
+    <div className="flex min-h-0 min-w-0 flex-1 flex-row overflow-hidden p-4">
+      <div className="flex w-1/4 min-h-0 min-w-0 shrink-0 flex-col overflow-y-auto border-r border-gray-300 pr-4">
+        {states.map((state) => (
+          <LeftMenuItem key={state} state={state} />
+        ))}
+      </div>
+      <div className="grid min-h-0 min-w-0 flex-1 auto-rows-min grid-cols-1 content-start gap-4 overflow-y-auto pl-4 sm:grid-cols-2">
+        {arcades.map((arcade, index) => (
+          <ArcadeButton
+            key={arcade.id ?? `arcade-${index}`}
+            id={arcade.id ?? index}
+            name={arcade.name}
+            location={arcade.location ?? ""}
+            reviews={arcade.reviews ?? 0}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function LeftMenuItem({
+  state,
+  onClick,
+}: {
+  state: string;
+  onClick?: () => void;
+}) {
+  return (
     <div
-      className={`${geistSans.className} ${geistMono.className} flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black`}
+      onClick={onClick}
+      className="cursor-pointer px-2 py-1 hover:bg-pink-500 hover:text-white"
     >
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the index.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs/pages/getting-started?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      {state}
     </div>
   );
 }
