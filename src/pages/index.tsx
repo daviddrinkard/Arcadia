@@ -54,26 +54,26 @@ const states = [
 ];
 
 const arcades = [
-  { name: "Dave&apos;s Arcade", location: "Atlanta, GA", reviews: 100, id: 1 },
-  { name: "John&apos;s Arcade", location: "New York, NY", reviews: 200, id: 2 },
+  { name: "Dave's Arcade", location: "Atlanta, GA", reviews: 100, id: 1 },
+  { name: "John's Arcade", location: "New York, NY", reviews: 200, id: 2 },
   {
-    name: "Jane&apos;s Arcade",
+    name: "Jane's Arcade",
     location: "Los Angeles, CA",
     reviews: 300,
     id: 3,
   },
-  { name: "Jim&apos;s Arcade", location: "Chicago, IL", reviews: 400, id: 4 },
-  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500, id: 5 },
-  { name: "Jack&apos;s Arcade", location: "Miami, FL", reviews: 600, id: 6 },
-  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500 },
-  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500, id: 8 },
-  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500, id: 9 },
-  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500, id: 10 },
-  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500, id: 11 },
-  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500, id: 12 },
-  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500, id: 13 },
-  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500, id: 14 },
-  { name: "Jill&apos;s Arcade", location: "Houston, TX", reviews: 500, id: 15 },
+  { name: "Jim's Arcade", location: "Chicago, IL", reviews: 400, id: 4 },
+  { name: "Jill's Arcade", location: "Houston, TX", reviews: 500, id: 5 },
+  { name: "Jack's Arcade", location: "Miami, FL", reviews: 600, id: 6 },
+  { name: "Jill's Arcade", location: "Houston, TX", reviews: 500 },
+  { name: "Jill's Arcade", location: "Houston, TX", reviews: 500, id: 8 },
+  { name: "Jill's Arcade", location: "Houston, TX", reviews: 500, id: 9 },
+  { name: "Jill's Arcade", location: "Houston, TX", reviews: 500, id: 10 },
+  { name: "Jill's Arcade", location: "Houston, TX", reviews: 500, id: 11 },
+  { name: "Jill's Arcade", location: "Houston, TX", reviews: 500, id: 12 },
+  { name: "Jill's Arcade", location: "Houston, TX", reviews: 500, id: 13 },
+  { name: "Jill's Arcade", location: "Houston, TX", reviews: 500, id: 14 },
+  { name: "Jill's Arcade", location: "Houston, TX", reviews: 500, id: 15 },
 ];
 export default function Home() {
   return (
