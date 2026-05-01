@@ -93,4 +93,12 @@ body {
   *::-webkit-scrollbar-corner {
     background: transparent;
   }
+
+  input {
+    border: 1px solid var(--border);
+    padding: 8px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    width: 100%;
+  }
 }
