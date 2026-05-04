@@ -111,7 +111,11 @@ export default function Home() {
           ))}
         </div>
       ) : (
-        <div>Hello World.</div>
+        <div className="w-full flex flex-col items-center">
+          <div>
+            <img src="images/Arcadia-black-large.svg" className="h-12" />
+          </div>
+        </div>
       )}
     </div>
   );
