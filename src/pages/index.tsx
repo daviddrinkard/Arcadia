@@ -111,9 +111,41 @@ export default function Home() {
           ))}
         </div>
       ) : (
-        <div className="w-full flex flex-col items-center">
-          <div>
-            <img src="images/Arcadia-black-large.svg" className="h-12" />
+        <div className="w-full flex flex-col items-center p-4">
+          <div className="p-8 border-b border-grey-300">
+            <img src="images/Arcadia-black-large.svg" className="h-16" />
+          </div>
+          <div className="flex flex-col items-center justify-center gap-4 p-4">
+            <p className="text-xl font-bold">Welcome to Arcadia!</p>
+            <p>
+              Arcadia is a community-driven arcade enthusiast site where players
+              can share information about their local arcades, in hopes of
+              bringing in more players. Each location has reviews, ratings and
+              game lists to give you an idea of what to expect when you visit!
+            </p>
+            <p>
+              <span className="font-bold">
+                To get started, select the state
+              </span>{" "}
+              you wish to browse to find a location near you! Not sure if you
+              want to visit that location? Checkout the game list to see if
+              there is something you must play, and then see what other players
+              have said about the arcade.
+            </p>
+            <p>
+              <span className="font-bold">
+                Looking to play a specific game?
+              </span>{" "}
+              Click 'Find A Game' up top to search by game and find a location
+              near you that features the game.
+            </p>
+            <p>
+              <span className="font-bold">Want to contribute?</span> Register an
+              account above to leave reviews, ratings, update game lists and{" "}
+              <span className="font-bold">
+                even add new locations to Arcadia.
+              </span>
+            </p>
           </div>
         </div>
       )}
