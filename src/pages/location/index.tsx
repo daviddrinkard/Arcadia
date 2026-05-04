@@ -1,13 +1,21 @@
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Button from "@/components/Button";
 import GameButton from "@/components/GameButton";
 import ReviewBlock from "@/components/ReviewBlock";
+import WarnModal from "@/components/WarnModal";
 
 export default function Location() {
   const router = useRouter();
   const raw = router.query.id;
   const id = raw === undefined ? undefined : Array.isArray(raw) ? raw[0] : raw;
+  const [showModal, setModal] = useState(false);
+
+  const alertUser = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setModal(true);
+    console.log("This thing is workin.");
+  };
 
   const games = [
     { name: "Street Fighter III", genre: "Fighting", id: 1 },
@@ -63,6 +71,7 @@ export default function Location() {
 
   return (
     <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden p-4">
+      {showModal && <WarnModal onClick={() => setModal(false)} />}
       <div className="flex flex-row items-center pb-4">
         <Button url="/" variant="secondary">
           Locations
@@ -113,6 +122,7 @@ export default function Location() {
                 id={game.id}
                 name={game.name}
                 genre={game.genre}
+                onClick={alertUser}
               />
             ))}
           </div>
