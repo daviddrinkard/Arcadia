@@ -73,7 +73,7 @@ export default function Location() {
     <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden p-4">
       {showModal && <WarnModal onClick={() => setModal(false)} />}
       <div className="flex flex-row items-center pb-4">
-        <Button url="/" variant="secondary">
+        <Button url="/?id=1" variant="secondary">
           Locations
         </Button>
       </div>
