@@ -45,7 +45,15 @@ export default function Location() {
     { name: "Street Fighter VIII", genre: "Fighting", id: 6 },
   ];
 
-  const reviews = [];
+  const reviews = [
+    {
+      rating: 5,
+      title: "Great Arcade!",
+      review:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi.",
+      id: 1,
+    },
+  ];
 
   if (locationData) {
     return (
