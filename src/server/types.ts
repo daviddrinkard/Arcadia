@@ -11,3 +11,16 @@ export type Location = {
   phone: string | null;
   email: string | null;
 };
+
+export type Game = {
+  game_id: number;
+  game_name: string | null;
+  game_genre: string | null;
+  game_description: string | null;
+  game_year: string | null;
+  game_region: string | null;
+  game_platform: string | null;
+  game_series: string | null;
+  game_manufacturer: string | null;
+  game_players: string | null;
+};
