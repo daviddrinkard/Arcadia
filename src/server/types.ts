@@ -12,6 +12,17 @@ export type Location = {
   email: string | null;
 };
 
+// A review row as returned by the Fetch-Reviews microservice. Note the
+// camelCase keys — they come straight from that service's response shape, not
+// from this app's snake_case Supabase columns.
+export type Review = {
+  reviewId: number;
+  locationId: number;
+  userId: string;
+  rating: number | null;
+  reviewText: string | null;
+};
+
 // A location that has a given game, joined through public.gamelist.
 // A trimmed subset of Location — just what the games-list arcade cards render.
 export type GameLocation = {

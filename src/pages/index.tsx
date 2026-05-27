@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import ArcadeButton from "@/components/ArcadeButton";
+import LocationCard from "@/components/LocationCard";
 import type { Location } from "@/server/types";
 
 export default function Home() {
@@ -108,7 +108,7 @@ export default function Home() {
           {!locationsLoading && !locationsError && locations.length > 0 && (
             <div className="grid min-h-0 min-w-0 flex-1 auto-rows-min grid-cols-1 content-start gap-4 overflow-y-auto sm:grid-cols-2">
               {locations.map((loc) => (
-                <ArcadeButton
+                <LocationCard
                   key={loc.location_id}
                   id={loc.location_id}
                   name={loc.name ?? "(unnamed)"}
@@ -117,7 +117,6 @@ export default function Home() {
                       ? `${loc.city}, ${loc.state}`
                       : (loc.state ?? "")
                   }
-                  reviews={0}
                 />
               ))}
             </div>
