@@ -1,8 +1,10 @@
 import Button from "@/components/Button";
 import GameButton from "@/components/GameButton";
 import ReviewBlock from "@/components/ReviewBlock";
+import Stars from "@/components/Stars";
 import WarnModal from "@/components/WarnModal";
-import type { Location } from "@/server/types";
+import { averageRating } from "@/lib/ratings";
+import type { Location, Review } from "@/server/types";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -12,6 +14,7 @@ export default function Location() {
   const id = raw === undefined ? undefined : Array.isArray(raw) ? raw[0] : raw;
   const [showModal, setModal] = useState(false);
   const [locationData, setLocationData] = useState<Location | null>(null);
+  const [reviews, setReviews] = useState<Review[]>([]);
 
   useEffect(() => {
     if (!router.isReady || id === undefined) return;
@@ -28,7 +31,25 @@ export default function Location() {
     };
   }, [router.isReady, id]);
 
-  console.log("locationData:", locationData);
+  // Reviews come from the Fetch-Reviews microservice (proxied through the API
+  // route). Best-effort: if the service is down we just show no reviews.
+  useEffect(() => {
+    if (!router.isReady || id === undefined) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(`/api/locations/${id}/reviews`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data: { reviews: Review[] } = await res.json();
+        if (!cancelled) setReviews(data.reviews);
+      } catch {
+        if (!cancelled) setReviews([]);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [router.isReady, id]);
 
   const alertUser = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -43,16 +64,6 @@ export default function Location() {
     { name: "Street Fighter VI", genre: "Fighting", id: 4 },
     { name: "Street Fighter VII", genre: "Fighting", id: 5 },
     { name: "Street Fighter VIII", genre: "Fighting", id: 6 },
-  ];
-
-  const reviews = [
-    {
-      rating: 5,
-      title: "Great Arcade!",
-      review:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi.",
-      id: 1,
-    },
   ];
 
   if (locationData) {
@@ -83,18 +94,23 @@ export default function Location() {
                 <p>{locationData.phone}</p>
                 <p>{locationData.email}</p>
               </div>
-              <div className="pt-4">Star Blocks Here XXXXX</div>
+              <div className="flex flex-row items-center gap-2 pt-4">
+                <span>Rating:</span>
+                <Stars rating={averageRating(reviews)} />
+              </div>
             </div>
 
-            {/* Reviews - TODO: ADD REVIEWS HERE */}
+            {/* Reviews — sourced from the Fetch-Reviews microservice. */}
             <div className="flex flex-col m-2 gap-2 overflow-y-auto">
+              {reviews.length === 0 && (
+                <p className="text-sm text-gray-500">No reviews yet.</p>
+              )}
               {reviews.map((review) => (
                 <ReviewBlock
-                  key={review.id}
-                  rating={review.rating}
-                  title={review.title}
-                  review={review.review}
-                  id={review.id}
+                  key={review.reviewId}
+                  rating={review.rating ?? 0}
+                  review={review.reviewText ?? ""}
+                  id={review.reviewId}
                 />
               ))}
             </div>
