@@ -12,6 +12,15 @@ export type Location = {
   email: string | null;
 };
 
+// A location that has a given game, joined through public.gamelist.
+// A trimmed subset of Location — just what the games-list arcade cards render.
+export type GameLocation = {
+  location_id: number;
+  name: string | null;
+  city: string | null;
+  state: string | null;
+};
+
 export type Game = {
   game_id: number;
   game_name: string | null;

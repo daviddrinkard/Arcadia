@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import ArcadeButton from "@/components/ArcadeButton";
-import type { Game } from "@/server/types";
+import type { Game, GameLocation } from "@/server/types";
 
 // Seed names include trailing region/revision tags, e.g. "1942 (Rev A)" or
 // "... [hb]". Strip from the first '(' or '[' for the left-rail display only —
@@ -9,11 +9,9 @@ import type { Game } from "@/server/types";
 const displayName = (name: string | null) =>
   (name ?? "(unnamed)").replace(/\s*[([].*$/, "").trim() || "(unnamed)";
 
-const arcades = [
-  { id: 1, name: "Dave's Arcade", location: "Atlanta, GA", reviews: 100 },
-  { id: 2, name: "John's Arcade", location: "New York, NY", reviews: 200 },
-  { id: 3, name: "Jane's Arcade", location: "Los Angeles, CA", reviews: 300 },
-];
+// "City, ST" for the arcade card, tolerating missing parts.
+const locationLabel = (loc: GameLocation) =>
+  [loc.city, loc.state].filter(Boolean).join(", ");
 
 export default function GameList() {
   const router = useRouter();
@@ -24,10 +22,15 @@ export default function GameList() {
   const [games, setGames] = useState<Game[]>([]);
   const [gamesLoading, setGamesLoading] = useState(true);
   const [gamesError, setGamesError] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
 
   const [game, setGame] = useState<Game | null>(null);
   const [gameLoading, setGameLoading] = useState(false);
   const [gameError, setGameError] = useState<string | null>(null);
+
+  const [locations, setLocations] = useState<GameLocation[]>([]);
+  const [locationsLoading, setLocationsLoading] = useState(false);
+  const [locationsError, setLocationsError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -73,32 +76,101 @@ export default function GameList() {
     };
   }, [router.isReady, selectedId]);
 
+  useEffect(() => {
+    if (!router.isReady || selectedId === undefined) {
+      setLocations([]);
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      setLocationsLoading(true);
+      setLocationsError(null);
+      try {
+        const res = await fetch(`/api/games/${selectedId}/locations`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data: { locations: GameLocation[] } = await res.json();
+        if (!cancelled) setLocations(data.locations);
+      } catch (e) {
+        if (!cancelled) setLocationsError((e as Error).message);
+      } finally {
+        if (!cancelled) setLocationsLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [router.isReady, selectedId]);
+
   const handleGameClick = (id: number) => {
     router.push(`/gamelist?id=${id}`);
   };
 
+  // Case-insensitive substring match on the full stored name, so "stre"
+  // matches both "Street Fighter" and "Fighting Street".
+  const q = query.trim().toLowerCase();
+  const filteredGames = q
+    ? games.filter((g) => (g.game_name ?? "").toLowerCase().includes(q))
+    : games;
+
   return (
     <div className="flex min-h-0 min-w-0 flex-1 flex-row overflow-hidden p-4">
-      <div className="flex w-1/4 min-h-0 min-w-0 shrink-0 flex-col overflow-y-auto border-r border-gray-300 pr-4">
-        {gamesLoading && (
-          <div className="px-2 py-1 text-gray-500">Loading games…</div>
-        )}
-        {gamesError && (
-          <div className="px-2 py-1 text-red-600">
-            Failed to load games: {gamesError}
-          </div>
-        )}
-        {!gamesLoading &&
-          !gamesError &&
-          games.map((g) => (
-            <LeftMenuItem
-              key={g.game_id}
-              id={g.game_id}
-              title={displayName(g.game_name)}
-              selected={g.game_id === selectedId}
-              onClick={handleGameClick}
-            />
-          ))}
+      <div className="flex w-1/4 min-h-0 min-w-0 shrink-0 flex-col border-r border-gray-300 pr-4">
+        {/* mb-0 cancels the global `input { margin-bottom: 16px }` base rule;
+            its phantom bottom margin otherwise enlarges the input's flex margin
+            box and pushes the clear button below center. Spacing below the box
+            comes from the wrapper's mb-2 instead. */}
+        <div className="mb-2 flex shrink-0 items-center">
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Filter games…"
+            className="mb-0 w-full min-w-0 rounded border border-gray-300 py-1 pl-2 pr-7 text-sm focus:border-pink-500 focus:outline-none"
+          />
+          {query && (
+            <button
+              type="button"
+              onClick={() => setQuery("")}
+              aria-label="Clear filter"
+              className="-ml-7 flex w-7 shrink-0 items-center justify-center text-gray-400 hover:text-gray-700"
+            >
+              <svg
+                viewBox="0 0 20 20"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                className="h-4 w-4"
+              >
+                <path d="M6 6l8 8M14 6l-8 8" />
+              </svg>
+            </button>
+          )}
+        </div>
+        <div className="flex min-h-0 flex-col overflow-y-auto">
+          {gamesLoading && (
+            <div className="px-2 py-1 text-gray-500">Loading games…</div>
+          )}
+          {gamesError && (
+            <div className="px-2 py-1 text-red-600">
+              Failed to load games: {gamesError}
+            </div>
+          )}
+          {!gamesLoading && !gamesError && filteredGames.length === 0 && (
+            <div className="px-2 py-1 text-gray-500">No games match “{query}”.</div>
+          )}
+          {!gamesLoading &&
+            !gamesError &&
+            filteredGames.map((g) => (
+              <LeftMenuItem
+                key={g.game_id}
+                id={g.game_id}
+                title={displayName(g.game_name)}
+                selected={g.game_id === selectedId}
+                onClick={handleGameClick}
+              />
+            ))}
+        </div>
       </div>
       <div className="flex min-h-0 min-w-0 flex-1 flex-col gap-2 overflow-hidden pl-4">
         {selectedId === undefined && (
@@ -123,15 +195,32 @@ export default function GameList() {
             </div>
             <p className="shrink-0">Arcades with this game:</p>
             <div className="grid min-h-0 w-full flex-1 auto-rows-min grid-cols-1 content-start gap-4 overflow-y-auto sm:grid-cols-2">
-              {arcades.map((arcade) => (
-                <ArcadeButton
-                  key={arcade.id}
-                  id={arcade.id}
-                  name={arcade.name}
-                  location={arcade.location}
-                  reviews={arcade.reviews}
-                />
-              ))}
+              {locationsLoading && (
+                <div className="text-gray-500">Loading arcades…</div>
+              )}
+              {locationsError && (
+                <div className="text-red-600">
+                  Failed to load arcades: {locationsError}
+                </div>
+              )}
+              {!locationsLoading &&
+                !locationsError &&
+                locations.length === 0 && (
+                  <div className="text-gray-500">
+                    No arcades list this game yet.
+                  </div>
+                )}
+              {!locationsLoading &&
+                !locationsError &&
+                locations.map((loc) => (
+                  <ArcadeButton
+                    key={loc.location_id}
+                    id={loc.location_id}
+                    name={loc.name ?? "(unnamed)"}
+                    location={locationLabel(loc)}
+                    reviews={0}
+                  />
+                ))}
             </div>
           </>
         )}
