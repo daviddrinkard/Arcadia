@@ -8,9 +8,13 @@
 // Override any of these per environment via the matching env var; the defaults
 // match each service's documented local dev port.
 
-// Fetch-Reviews microservice — GET /reviews/location/:locationId
+// Fetch-Reviews microservice — GET /api/reviews?locationId={id}&page={n}&pageSize={n}
 export const FETCH_REVIEWS_URL =
   process.env.FETCH_REVIEWS_SERVICE_URL ?? "http://localhost:4000";
+
+// Top-Locations microservice — GET /api/top-locations?limit={n}
+export const TOP_LOCATIONS_URL =
+  process.env.TOP_LOCATIONS_SERVICE_URL ?? "http://localhost:4001";
 
 // Add-Data microservice — POST /add
 export const ADD_DATA_URL =

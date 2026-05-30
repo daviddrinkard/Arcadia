@@ -17,6 +17,19 @@ export async function listLocations(
   return data ?? [];
 }
 
+// Fetch several locations at once by id. Used to flesh out the bare ids the
+// Top-Locations microservice returns into renderable cards.
+export async function getLocationsByIds(ids: number[]): Promise<Location[]> {
+  if (ids.length === 0) return [];
+  const { data, error } = await supabase
+    .from("locations")
+    .select(LOCATION_COLUMNS)
+    .in("location_id", ids);
+
+  if (error) throw new Error(`Failed to get locations: ${error.message}`);
+  return data ?? [];
+}
+
 export async function getLocation(id: number): Promise<Location> {
   const { data, error } = await supabase
     .from("locations")

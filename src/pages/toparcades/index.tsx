@@ -1,62 +1,28 @@
 import ArcadeButton from "@/components/ArcadeButton";
+import type { TopArcade } from "@/server/types";
+import { useEffect, useState } from "react";
+
 export default function TopArcades() {
-  const arcades = [
-    {
-      name: "Dave&apos;s Arcade",
-      location: "Atlanta, GA",
-      reviews: 100,
-      id: 1,
-    },
-    {
-      name: "John&apos;s Arcade",
-      location: "New York, NY",
-      reviews: 200,
-      id: 2,
-    },
-    {
-      name: "Jane&apos;s Arcade",
-      location: "Los Angeles, CA",
-      reviews: 300,
-      id: 3,
-    },
-    { name: "Jim&apos;s Arcade", location: "Chicago, IL", reviews: 400, id: 4 },
-    {
-      name: "Jill&apos;s Arcade",
-      location: "Houston, TX",
-      reviews: 500,
-      id: 5,
-    },
-    {
-      name: "Jill&apos;s Arcade",
-      location: "Houston, TX",
-      reviews: 500,
-      id: 5,
-    },
-    {
-      name: "Jill&apos;s Arcade",
-      location: "Houston, TX",
-      reviews: 500,
-      id: 5,
-    },
-    {
-      name: "Jill&apos;s Arcade",
-      location: "Houston, TX",
-      reviews: 500,
-      id: 5,
-    },
-    {
-      name: "Jill&apos;s Arcade",
-      location: "Houston, TX",
-      reviews: 500,
-      id: 5,
-    },
-    {
-      name: "Jill&apos;s Arcade",
-      location: "Houston, TX",
-      reviews: 500,
-      id: 5,
-    },
-  ];
+  const [arcades, setArcades] = useState<TopArcade[]>([]);
+
+  // Top arcades come from the Top-Locations microservice (proxied through the
+  // API route). Best-effort: if the service is down we just show none.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/top-locations");
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data: { topArcades: TopArcade[] } = await res.json();
+        if (!cancelled) setArcades(data.topArcades);
+      } catch {
+        if (!cancelled) setArcades([]);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center">
@@ -71,6 +37,7 @@ export default function TopArcades() {
             name={arcade.name}
             location={arcade.location}
             reviews={arcade.reviews}
+            rating={arcade.rating}
           />
         ))}
       </div>
