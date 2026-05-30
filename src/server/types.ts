@@ -23,6 +23,24 @@ export type Review = {
   reviewText: string | null;
 };
 
+// A ranked location as returned by the Top-Locations microservice. It only
+// knows ids + aggregate scores — names/cities are filled in from our own DB.
+export type TopLocation = {
+  locationId: number;
+  averageRating: number;
+  reviewCount: number;
+};
+
+// A top-ranked arcade, enriched with location details and shaped for the
+// Top Arcades cards (matches ArcadeButtonProps).
+export type TopArcade = {
+  id: number;
+  name: string;
+  location: string;
+  reviews: number;
+  rating: number;
+};
+
 // A location that has a given game, joined through public.gamelist.
 // A trimmed subset of Location — just what the games-list arcade cards render.
 export type GameLocation = {
