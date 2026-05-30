@@ -16,7 +16,8 @@ export const FETCH_REVIEWS_URL =
 export const TOP_LOCATIONS_URL =
   process.env.TOP_LOCATIONS_SERVICE_URL ?? "http://localhost:4001";
 
-// Likes microservice — GET/POST /api/likes (keyed on userId + locationId)
+// Likes microservice — POST /api/likes/location, GET /api/likes/location/status
+// (keyed on userId + locationId)
 export const LIKES_URL =
   process.env.LIKES_SERVICE_URL ?? "http://localhost:4002";
 
