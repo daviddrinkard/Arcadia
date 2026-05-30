@@ -9,7 +9,7 @@ export async function getLikeStatus(
   locationId: number,
 ): Promise<boolean> {
   const res = await fetch(
-    `${LIKES_URL}/api/likes?userId=${encodeURIComponent(userId)}&locationId=${locationId}`,
+    `${LIKES_URL}/api/likes/location/status?userId=${encodeURIComponent(userId)}&locationId=${locationId}`,
   );
   if (!res.ok) {
     throw new Error(`Likes service responded ${res.status}`);
@@ -23,7 +23,7 @@ export async function setLike(
   userId: string,
   locationId: number,
 ): Promise<void> {
-  const res = await fetch(`${LIKES_URL}/api/likes`, {
+  const res = await fetch(`${LIKES_URL}/api/likes/location`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ userId, locationId }),

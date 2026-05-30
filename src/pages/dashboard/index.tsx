@@ -1,7 +1,8 @@
-import ArcadeButton from "@/components/ArcadeButton";
 import Button from "@/components/Button";
 import GameButton from "@/components/GameButton";
-import { useState } from "react";
+import LocationCard from "@/components/LocationCard";
+import type { Location } from "@/server/types";
+import { useEffect, useState } from "react";
 
 export default function Dashboard() {
   // Add Location form. Submits to /api/locations, which proxies the Add-Data
@@ -15,6 +16,27 @@ export default function Dashboard() {
   });
   const [status, setStatus] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  // "My Locations" = the locations the current user has liked, read from the
+  // relation table via /api/liked-locations. Best-effort: leave empty on error.
+  const [likedLocations, setLikedLocations] = useState<Location[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/liked-locations");
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data: { locations: Location[] } = await res.json();
+        if (!cancelled) setLikedLocations(data.locations);
+      } catch {
+        if (!cancelled) setLikedLocations([]);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const setField = (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm((f) => ({ ...f, [key]: e.target.value }));
@@ -45,54 +67,6 @@ export default function Dashboard() {
     { name: "Street Fighter VI", genre: "Fighting", id: 4 },
     { name: "Street Fighter VII", genre: "Fighting", id: 5 },
     { name: "Street Fighter VIII", genre: "Fighting", id: 6 },
-  ];
-
-  const arcades = [
-    {
-      name: "Dave's Arcade",
-      location: "Atlanta, GA",
-      reviews: 100,
-      id: 1,
-    },
-    {
-      name: "John's Arcade",
-      location: "New York, NY",
-      reviews: 200,
-      id: 2,
-    },
-    {
-      name: "Jane's Arcade",
-      location: "Los Angeles, CA",
-      reviews: 300,
-      id: 3,
-    },
-    { name: "Jim's Arcade", location: "Chicago, IL", reviews: 400, id: 4 },
-    {
-      name: "Jill's Arcade",
-      location: "Houston, TX",
-      reviews: 500,
-      id: 5,
-    },
-    { name: "Jack's Arcade", location: "Miami, FL", reviews: 600, id: 6 },
-    { name: "Jill's Arcade", location: "Houston, TX", reviews: 500 },
-    {
-      name: "Jill's Arcade",
-      location: "Houston, TX",
-      reviews: 500,
-      id: 8,
-    },
-    {
-      name: "Jill's Arcade",
-      location: "Houston, TX",
-      reviews: 500,
-      id: 9,
-    },
-    {
-      name: "Jill's Arcade",
-      location: "Houston, TX",
-      reviews: 500,
-      id: 10,
-    },
   ];
 
   return (
@@ -133,13 +107,15 @@ export default function Dashboard() {
       <div className="flex w-1/3 min-h-0 min-w-0 shrink-0 flex-col overflow-y-auto border-r border-gray-300">
         <div className="max-w-md mx-auto flex flex-col justify-center items-center gap-2">
           <p className="text-2xl font-bold pb-4">My Locations</p>
-          {arcades.map((arcade, index) => (
-            <ArcadeButton
-              key={arcade.id ?? `arcade-${index}`}
-              id={arcade.id ?? index}
-              name={arcade.name}
-              location={arcade.location ?? ""}
-              reviews={arcade.reviews ?? 0}
+          {likedLocations.length === 0 && (
+            <p className="text-sm text-gray-500">No liked locations yet.</p>
+          )}
+          {likedLocations.map((loc) => (
+            <LocationCard
+              key={loc.location_id}
+              id={loc.location_id}
+              name={loc.name ?? ""}
+              location={[loc.city, loc.state].filter(Boolean).join(", ")}
             />
           ))}
         </div>

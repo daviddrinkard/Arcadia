@@ -30,6 +30,25 @@ export async function getLocationsByIds(ids: number[]): Promise<Location[]> {
   return data ?? [];
 }
 
+// The join table the Likes microservice writes to: (user_id uuid, location_id
+// int). The dashboard reads it directly (no microservice) to list a user's
+// liked locations.
+const LIKES_TABLE = "user_liked_locations";
+
+// List the locations a user has liked. Reads the relation table for the user's
+// liked location ids, then fetches those locations. Returns [] when none.
+export async function listLikedLocations(userId: string): Promise<Location[]> {
+  const { data, error } = await supabase
+    .from(LIKES_TABLE)
+    .select("location_id")
+    .eq("user_id", userId);
+
+  if (error) throw new Error(`Failed to list liked locations: ${error.message}`);
+
+  const ids = (data ?? []).map((row) => row.location_id as number);
+  return getLocationsByIds(ids);
+}
+
 export async function getLocation(id: number): Promise<Location> {
   const { data, error } = await supabase
     .from("locations")
