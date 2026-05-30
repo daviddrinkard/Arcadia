@@ -1,5 +1,6 @@
 import Button from "@/components/Button";
 import GameButton from "@/components/GameButton";
+import LikeButton from "@/components/LikeButton";
 import ReviewBlock from "@/components/ReviewBlock";
 import Stars from "@/components/Stars";
 import WarnModal from "@/components/WarnModal";
@@ -85,7 +86,10 @@ export default function Location() {
 
             {/* Name & Locations */}
             <div className="flex flex-col m-2">
-              <p className="text-3xl font-bold">{locationData.name}</p>
+              <div className="flex flex-row items-center gap-3">
+                <p className="text-3xl font-bold">{locationData.name}</p>
+                <LikeButton locationId={locationData.location_id} />
+              </div>
               <div className="flex flex-col text-sm">
                 <p>{locationData.street_address}</p>
                 <p>
