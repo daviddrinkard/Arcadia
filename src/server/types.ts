@@ -50,6 +50,14 @@ export type GameLocation = {
   state: string | null;
 };
 
+// A game available at a given location, joined through public.gamelist.
+// A trimmed subset of Game — just what the location page's game cards render.
+export type LocationGame = {
+  game_id: number;
+  game_name: string | null;
+  game_genre: string | null;
+};
+
 export type Game = {
   game_id: number;
   game_name: string | null;

@@ -5,7 +5,7 @@ import ReviewBlock from "@/components/ReviewBlock";
 import Stars from "@/components/Stars";
 import WarnModal from "@/components/WarnModal";
 import { averageRating } from "@/lib/ratings";
-import type { Location, Review } from "@/server/types";
+import type { Location, LocationGame, Review } from "@/server/types";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -16,6 +16,7 @@ export default function Location() {
   const [showModal, setModal] = useState(false);
   const [locationData, setLocationData] = useState<Location | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [games, setGames] = useState<LocationGame[]>([]);
 
   useEffect(() => {
     if (!router.isReady || id === undefined) return;
@@ -52,20 +53,30 @@ export default function Location() {
     };
   }, [router.isReady, id]);
 
+  // Games available at this location, from public.gamelist via the API route.
+  useEffect(() => {
+    if (!router.isReady || id === undefined) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(`/api/locations/${id}/games`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data: { games: LocationGame[] } = await res.json();
+        if (!cancelled) setGames(data.games);
+      } catch {
+        if (!cancelled) setGames([]);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [router.isReady, id]);
+
   const alertUser = (e: React.MouseEvent) => {
     e.preventDefault();
     setModal(true);
     console.log("This thing is workin.");
   };
-
-  const games = [
-    { name: "Street Fighter III", genre: "Fighting", id: 1 },
-    { name: "Street Fighter IV", genre: "Fighting", id: 2 },
-    { name: "Street Fighter V", genre: "Fighting", id: 3 },
-    { name: "Street Fighter VI", genre: "Fighting", id: 4 },
-    { name: "Street Fighter VII", genre: "Fighting", id: 5 },
-    { name: "Street Fighter VIII", genre: "Fighting", id: 6 },
-  ];
 
   if (locationData) {
     return (
@@ -125,12 +136,15 @@ export default function Location() {
               <p className="text-lg font-bold">Available Games:</p>
             </div>
             <div className="grid min-h-0 w-full flex-1 auto-rows-min grid-cols-2 content-start gap-3 overflow-y-auto">
+              {games.length === 0 && (
+                <p className="text-sm text-gray-500">No games listed yet.</p>
+              )}
               {games.map((game) => (
                 <GameButton
-                  key={game.name}
-                  id={game.id}
-                  name={game.name}
-                  genre={game.genre}
+                  key={game.game_id}
+                  id={game.game_id}
+                  name={game.game_name ?? "Unknown"}
+                  genre={game.game_genre ?? "Unknown"}
                   onClick={alertUser}
                 />
               ))}

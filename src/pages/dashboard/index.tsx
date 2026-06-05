@@ -1,16 +1,18 @@
 import Button from "@/components/Button";
-import GameButton from "@/components/GameButton";
+// import GameButton from "@/components/GameButton"; // used by the hidden "My Games" column below
 import LocationCard from "@/components/LocationCard";
 import type { Location } from "@/server/types";
 import { useEffect, useState } from "react";
 
 export default function Dashboard() {
   // Add Location form. Submits to /api/locations, which proxies the Add-Data
-  // microservice. (Address maps to the location's street_address; city/state/
-  // zip aren't collected by this form yet.)
+  // microservice. Collects every field the service's location schema accepts.
   const [form, setForm] = useState({
     name: "",
     street_address: "",
+    city: "",
+    state: "",
+    zip: "",
     phone: "",
     email: "",
   });
@@ -52,7 +54,15 @@ export default function Dashboard() {
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       setStatus("Location submitted.");
-      setForm({ name: "", street_address: "", phone: "", email: "" });
+      setForm({
+        name: "",
+        street_address: "",
+        city: "",
+        state: "",
+        zip: "",
+        phone: "",
+        email: "",
+      });
     } catch (e) {
       setStatus(`Failed to add location: ${(e as Error).message}`);
     } finally {
@@ -60,14 +70,15 @@ export default function Dashboard() {
     }
   };
 
-  const games = [
-    { name: "Street Fighter III", genre: "Fighting", id: 1 },
-    { name: "Street Fighter IV", genre: "Fighting", id: 2 },
-    { name: "Street Fighter V", genre: "Fighting", id: 3 },
-    { name: "Street Fighter VI", genre: "Fighting", id: 4 },
-    { name: "Street Fighter VII", genre: "Fighting", id: 5 },
-    { name: "Street Fighter VIII", genre: "Fighting", id: 6 },
-  ];
+  // Placeholder data for the hidden "My Games" column below.
+  // const games = [
+  //   { name: "Street Fighter III", genre: "Fighting", id: 1 },
+  //   { name: "Street Fighter IV", genre: "Fighting", id: 2 },
+  //   { name: "Street Fighter V", genre: "Fighting", id: 3 },
+  //   { name: "Street Fighter VI", genre: "Fighting", id: 4 },
+  //   { name: "Street Fighter VII", genre: "Fighting", id: 5 },
+  //   { name: "Street Fighter VIII", genre: "Fighting", id: 6 },
+  // ];
 
   return (
     <div className="flex min-h-0 min-w-0 flex-1 flex-row overflow-hidden p-4">
@@ -88,6 +99,24 @@ export default function Dashboard() {
           />
           <input
             type="text"
+            placeholder="City"
+            value={form.city}
+            onChange={setField("city")}
+          />
+          <input
+            type="text"
+            placeholder="State"
+            value={form.state}
+            onChange={setField("state")}
+          />
+          <input
+            type="text"
+            placeholder="Zip"
+            value={form.zip}
+            onChange={setField("zip")}
+          />
+          <input
+            type="text"
             placeholder="Phone Number"
             value={form.phone}
             onChange={setField("phone")}
@@ -104,7 +133,9 @@ export default function Dashboard() {
           {status && <p className="pt-2 text-sm text-gray-600">{status}</p>}
         </div>
       </div>
-      <div className="flex w-1/3 min-h-0 min-w-0 shrink-0 flex-col overflow-y-auto border-r border-gray-300">
+      {/* Stretches over the space of the hidden "My Games" column; restore
+          w-1/3 shrink-0 and the border-r when that column comes back. */}
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto">
         <div className="max-w-md mx-auto flex flex-col justify-center items-center gap-2">
           <p className="text-2xl font-bold pb-4">My Locations</p>
           {likedLocations.length === 0 && (
@@ -120,6 +151,8 @@ export default function Dashboard() {
           ))}
         </div>
       </div>
+      {/* "My Games" — hidden for now; not wired up yet. Re-enable along with
+          the GameButton import and the placeholder games array above.
       <div className="flex w-1/3 min-h-0 min-w-0 shrink-0 flex-col overflow-y-auto">
         <div className="max-w-md mx-auto flex flex-col justify-center items-center gap-2">
           <p className="text-2xl font-bold pb-4">My Games</p>
@@ -133,6 +166,7 @@ export default function Dashboard() {
           ))}
         </div>
       </div>
+      */}
     </div>
   );
 }
