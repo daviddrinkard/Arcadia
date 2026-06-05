@@ -1,5 +1,5 @@
 import { supabase } from "@/lib/supabase";
-import type { Game, GameLocation } from "./types";
+import type { Game, GameLocation, LocationGame } from "./types";
 
 const GAME_COLUMNS =
   "game_id, game_name, game_genre, game_description, game_year, game_region, game_platform, game_series, game_manufacturer, game_players" as const;
@@ -48,4 +48,30 @@ export async function listLocationsForGame(
         .locations;
       return Array.isArray(loc) ? loc : loc ? [loc] : [];
     });
+}
+
+// Games available at a given location, resolved through the public.gamelist
+// join table. The inverse of listLocationsForGame. Returns [] when the
+// location has no games.
+export async function listGamesForLocation(
+  locationId: number,
+): Promise<LocationGame[]> {
+  const { data, error } = await supabase
+    .from("gamelist")
+    .select("games(game_id, game_name, game_genre)")
+    .eq("location_id", locationId);
+
+  if (error) {
+    throw new Error(`Failed to list games for location: ${error.message}`);
+  }
+
+  // Each gamelist row embeds its single related game (FK is to-one).
+  // Untyped client, so normalize defensively and drop any nulls.
+  return (data ?? [])
+    .flatMap((row) => {
+      const game = (row as { games: LocationGame | LocationGame[] | null })
+        .games;
+      return Array.isArray(game) ? game : game ? [game] : [];
+    })
+    .sort((a, b) => (a.game_name ?? "").localeCompare(b.game_name ?? ""));
 }
